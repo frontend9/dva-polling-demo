@@ -3,14 +3,22 @@ import styles from './index.css';
 import { connect } from 'dva';
 import fooModel from '../models/foo';
 
-const { namespace } = fooModel;
+const { namespace, acTyp } = fooModel;
 
 const mapStateToProps = (state) => {
   const { dogImgURL } = state[namespace];
   return { dogImgURL };
 };
 
-@connect(mapStateToProps)
+const mpaDispatchToProps = (dispatch) => {
+  return {
+    onClickFetchImg() {
+      return dispatch({ type: `${namespace}/${acTyp.fetch_dogImg}` });
+    },
+  };
+};
+
+@connect(mapStateToProps, mpaDispatchToProps)
 export default class IndexPage extends PureComponent {
   render() {
     return (
@@ -20,6 +28,9 @@ export default class IndexPage extends PureComponent {
         </div>
         <div>
           <img src={this.props.dogImgURL} alt="dog image" height="300" />
+        </div>
+        <div style={{ marginTop: '16px' }}>
+          <button onClick={this.props.onClickFetchImg}>点击获取图片</button>
         </div>
       </div>
     );
